@@ -7,6 +7,11 @@
 - `python scripts/setup_auth.py` — Generate Google OAuth URL (Step 1 of auth setup)
 - `python scripts/setup_auth.py --callback "<URL>"` — Complete auth and save token.json (Step 2 of auth setup)
 
+## Script Roles
+
+- **`setup_auth.py`** — Run once to complete OAuth flow and save `token.json`. Do not run again unless re-authentication is needed.
+- **`auth.py`** — Internal module used automatically by `fetch_emails.py` and `create_event.py`. Loads `token.json` and refreshes it when expired. Do not run directly.
+
 ## Auth Setup (First-Time Only)
 
 This skill requires a `token.json` file to access Gmail and Google Calendar on behalf of the user.

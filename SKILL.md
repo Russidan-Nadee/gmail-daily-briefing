@@ -59,6 +59,9 @@ git clone https://github.com/Russidan-Nadee/gmail-daily-briefing.git ~/skills/gm
 ### Step 2 — Connect to the agent
 
 1. Send the `client_secret_*.json` file to the agent as an attachment
+   - Via **Telegram**: send as a file (not photo) in your Clawdbot chat
+   - Via **Claude Desktop**: drag and drop the file into the chat
+   - Via **other platforms**: attach the file the same way you attach any document
 2. The agent will print an authorization URL — click it to open in your browser
 3. Log in with your Google account and click **Allow**
 4. Your browser will redirect to a `localhost` page showing an error — **this is normal**
