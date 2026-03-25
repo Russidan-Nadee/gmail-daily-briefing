@@ -1,31 +1,15 @@
-from __future__ import print_function
-import os.path
 import re
 import html
 import unicodedata
 import base64
+import sys
+import os
 from email.utils import parsedate_to_datetime
-from google.oauth2.credentials import Credentials
-from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
-# Scopes
-SCOPES = ['https://www.googleapis.com/auth/gmail.readonly',
-          'https://www.googleapis.com/auth/calendar.events']
-
-def auth_google():
-    creds = None
-    if os.path.exists('token.json'):
-        creds = Credentials.from_authorized_user_file('token.json', SCOPES)
-    if not creds or not creds.valid:
-        flow = InstalledAppFlow.from_client_secrets_file(
-            'credentials.json', SCOPES)
-        print("Opening browser for Google login... (check your browser window)")
-        creds = flow.run_local_server(port=0)
-        with open('token.json', 'w') as token:
-            token.write(creds.to_json())
-    return creds
+sys.path.insert(0, os.path.dirname(__file__))
+from auth import auth_google
 
 def clean_text(text):
     text = html.unescape(text)
@@ -34,7 +18,6 @@ def clean_text(text):
     return text
 
 def extract_body(payload):
-    """Recursively extract plain text body from email payload."""
     if payload.get('mimeType') == 'text/plain':
         data = payload.get('body', {}).get('data', '')
         if data:
@@ -53,7 +36,7 @@ def fetch_emails(service):
         while True:
             results = service.users().messages().list(
                 userId='me',
-                q='newer_than:1d',  # last 24 hours
+                q='newer_than:1d',
                 pageToken=next_page_token
             ).execute()
 
@@ -79,7 +62,7 @@ def fetch_emails(service):
         print(f'An error occurred: {error}')
         return []
 
-def main():
+if __name__ == '__main__':
     creds = auth_google()
     service = build('gmail', 'v1', credentials=creds)
     emails = fetch_emails(service)
@@ -92,6 +75,3 @@ def main():
         print(f"Subject: {email['subject']}")
         print(f"Body:\n{email['body']}")
         print("=" * 60)
-
-if __name__ == '__main__':
-    main()
