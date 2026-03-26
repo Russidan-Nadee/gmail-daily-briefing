@@ -4,12 +4,16 @@ import unicodedata
 import base64
 import sys
 import os
+from datetime import datetime, timezone
 from email.utils import parsedate_to_datetime
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
-sys.path.insert(0, os.path.dirname(__file__))
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from auth import auth_google
+
+MAX_EMAILS = 50
+MAX_BODY_LENGTH = 500
 
 def clean_text(text):
     text = html.unescape(text)
@@ -28,15 +32,26 @@ def extract_body(payload):
             return result
     return ''
 
-def fetch_emails(service):
+def _parse_date(date_str):
+    """Parse RFC 2822 date string; return epoch-aware datetime or datetime.min on failure."""
+    if not date_str:
+        return datetime.min.replace(tzinfo=timezone.utc)
+    try:
+        return parsedate_to_datetime(date_str)
+    except Exception:
+        return datetime.min.replace(tzinfo=timezone.utc)
+
+def fetch_emails(service, max_results=MAX_EMAILS):
     try:
         emails = []
         next_page_token = None
 
-        while True:
+        while len(emails) < max_results:
+            batch_size = min(max_results - len(emails), 100)
             results = service.users().messages().list(
                 userId='me',
                 q='newer_than:1d',
+                maxResults=batch_size,
                 pageToken=next_page_token
             ).execute()
 
@@ -50,6 +65,8 @@ def fetch_emails(service):
                 body = clean_text(extract_body(msg_data['payload']))
                 if not body:
                     body = clean_text(msg_data.get('snippet', ''))
+                if len(body) > MAX_BODY_LENGTH:
+                    body = body[:MAX_BODY_LENGTH] + '...'
                 emails.append({'subject': subject, 'from': sender, 'date': date, 'body': body})
 
             next_page_token = results.get('nextPageToken')
@@ -66,7 +83,7 @@ if __name__ == '__main__':
     creds = auth_google()
     service = build('gmail', 'v1', credentials=creds)
     emails = fetch_emails(service)
-    emails.sort(key=lambda e: parsedate_to_datetime(e['date']) if e['date'] else 0, reverse=True)
+    emails.sort(key=lambda e: _parse_date(e['date']), reverse=True)
     print(f"Total emails: {len(emails)}")
     print("=" * 60)
     for email in emails:

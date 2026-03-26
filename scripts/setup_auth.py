@@ -11,29 +11,16 @@ Step 2: Complete auth with callback URL
 """
 import sys
 import os
-import glob
 import json
 import base64
 import hashlib
 import secrets
 import argparse
 import urllib.parse
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from auth import SCOPES, find_credentials_file
 from google_auth_oauthlib.flow import InstalledAppFlow
-
-SCOPES = [
-    'https://www.googleapis.com/auth/gmail.readonly',
-    'https://www.googleapis.com/auth/calendar.events'
-]
-
-def find_credentials_file():
-    if os.path.exists('credentials.json'):
-        return 'credentials.json'
-    matches = glob.glob('client_secret_*.json')
-    if matches:
-        return matches[0]
-    raise FileNotFoundError(
-        "No credentials file found. Place credentials.json or client_secret_*.json in the project root."
-    )
 
 def generate_pkce():
     code_verifier = secrets.token_urlsafe(32)

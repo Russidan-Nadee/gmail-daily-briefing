@@ -9,6 +9,8 @@ sys.path.insert(0, os.path.dirname(__file__))
 from auth import auth_google
 
 def create_event(service, title, date, time, duration=60):
+    if duration <= 0:
+        raise ValueError(f"duration must be a positive number of minutes, got {duration}")
     start_dt = datetime.strptime(f"{date} {time}", "%Y-%m-%d %H:%M")
     end_dt = start_dt + timedelta(minutes=duration)
 
