@@ -22,11 +22,16 @@ pip install -r requirements.txt
 - `python scripts/create_event.py --title "..." --date "YYYY-MM-DD" --time "HH:MM" [--duration 60]` — Create a Google Calendar event
 - `python scripts/setup_auth.py` — Generate Google OAuth URL (Step 1 of auth setup)
 - `python scripts/setup_auth.py --callback "<URL>"` — Complete auth and save token.json (Step 2 of auth setup)
+- `python scripts/refresh_service.py` — Run a background service that refreshes the Google OAuth token every 30 minutes automatically.
+    - Use this script if you want to ensure the token never expires during long-running or scheduled operations.
+    - The script logs each refresh attempt and any errors to the console.
+    - Can be run as a background process or scheduled with a process manager.
 
 ## Script Roles
 
 - **`setup_auth.py`** — Run once to complete OAuth flow and save `token.json`. Do not run again unless re-authentication is needed.
 - **`auth.py`** — Internal module used automatically by `fetch_emails.py` and `create_event.py`. Loads `token.json` and refreshes it when expired. Do not run directly.
+- **`refresh_service.py`** — Keeps the Google OAuth token fresh by calling `auth_google()` every 30 minutes. No user interaction required after initial setup.
 
 ## Auth Setup (First-Time Only)
 
@@ -48,6 +53,16 @@ If `token.json` does not exist, the agent MUST complete the following setup befo
 - The redirect URL will look like: `http://localhost/?state=...&code=...&scope=...`
 - The "error" page the user sees is normal — it just means no server is running at localhost, which is expected
 - Once `token.json` is saved, the agent auto-refreshes it when expired — no need to repeat setup
+
+## Background Token Refresh
+
+- `python scripts/refresh_service.py` — Run a background service that refreshes the Google OAuth token every 30 minutes automatically.
+    - Use this script if you want to ensure the token never expires during long-running or scheduled operations.
+    - The script logs each refresh attempt and any errors to the console.
+    - Can be run as a background process or scheduled with a process manager.
+
+### Script Role
+- **`refresh_service.py`** — Keeps the Google OAuth token fresh by calling `auth_google()` every 30 minutes. No user interaction required after initial setup.
 
 ## Configuration
 

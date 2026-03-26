@@ -1,5 +1,4 @@
 ---
----
 name: mail-summary
 description: Fetch Gmail emails from the last 24h, rank by importance, summarize into bullet points, and auto-create Google Calendar events for detected meetings.
 metadata:
@@ -30,6 +29,7 @@ This skill reads Gmail emails, ranks them by importance, summarizes each email i
 - Summarize emails into bullet points
 - Detect meeting/interview emails
 - Create Google Calendar events (only when not already added)
+- Auto-refreshes Google OAuth token as needed for uninterrupted access.
 
 ## Installation
 
