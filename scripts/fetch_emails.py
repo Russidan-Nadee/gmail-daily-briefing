@@ -11,13 +11,15 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from auth import auth_google
+from auth import auth_google, get_config
 
 MAX_EMAILS = 50
 MAX_BODY_LENGTH = 500
 
+config = get_config()
+LOG_LEVEL = getattr(logging, config.get('log_level', 'INFO').upper(), logging.INFO)
 logging.basicConfig(
-    level=logging.INFO,
+    level=LOG_LEVEL,
     format='%(asctime)s %(levelname)s %(message)s',
     handlers=[logging.StreamHandler()]
 )
@@ -54,11 +56,13 @@ def fetch_emails(service, max_results=MAX_EMAILS):
         next_page_token = None
         logging.info("Fetching emails from Gmail API...")
 
+        lookback_hours = int(config.get('lookback_hours', 24))
+        lookback_str = f"newer_than:{lookback_hours}h"
         while len(emails) < max_results:
             batch_size = min(max_results - len(emails), 100)
             results = service.users().messages().list(
                 userId='me',
-                q='newer_than:1d',
+                q=lookback_str,
                 maxResults=batch_size,
                 pageToken=next_page_token
             ).execute()
