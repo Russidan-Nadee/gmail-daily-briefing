@@ -1,4 +1,4 @@
-# Agent Instructions — Gmail Daily Briefing
+# Agent Instructions — Mail Summary
 
 ## Setup Before First Use
 
@@ -7,7 +7,7 @@
 Before running any script, ensure the Python environment is ready:
 
 ```bash
-cd ~/.openclaw/workspace/skills/gmail-daily-briefing
+cd ~/.openclaw/workspace/skills/mail-summary
 python -m venv venv
 source venv/bin/activate        # macOS/Linux
 venv\Scripts\activate           # Windows

@@ -1,4 +1,4 @@
-# Gmail Daily Briefing
+# Mail Summary
 
 An AI agent skill that reads your Gmail, ranks emails by importance, summarizes them into bullet points, and automatically creates Google Calendar events for detected meetings.
 
@@ -18,7 +18,7 @@ An AI agent skill that reads your Gmail, ranks emails by importance, summarizes 
 Install Python dependencies:
 
 ```bash
-cd ~/.openclaw/workspace/skills/gmail-daily-briefing
+cd ~/.openclaw/workspace/skills/mail-summary
 python -m venv venv
 source venv/bin/activate        # macOS/Linux
 venv\Scripts\activate           # Windows
@@ -30,13 +30,13 @@ pip install -r requirements.txt
 Via ClawHub (recommended):
 
 ```
-clawhub install gmail-daily-briefing
+clawhub install mail-summary
 ```
 
 Manual:
 
 ```bash
-git clone https://github.com/Russidan-Nadee/gmail-daily-briefing.git ~/.openclaw/workspace/skills/gmail-daily-briefing
+git clone https://github.com/Russidan-Nadee/mail-summary.git ~/.openclaw/workspace/skills/mail-summary
 ```
 
 ## Setup (First-Time Only)
@@ -75,7 +75,7 @@ Just say: **"Summarize today's important emails"**
 ## Project Structure
 
 ```
-gmail-daily-briefing/
+mail-summary/
 ├── SKILL.md                  # Skill definition for ClawHub
 ├── README.md                 # This file
 ├── requirements.txt          # Python dependencies

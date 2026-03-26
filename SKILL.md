@@ -1,6 +1,15 @@
 ---
-name: gmail-daily-briefing
+---
+name: mail-summary
 description: Fetch Gmail emails from the last 24h, rank by importance, summarize into bullet points, and auto-create Google Calendar events for detected meetings.
+metadata:
+  openclaw:
+    requires:
+      bins:
+        - python
+      files:
+        - token.json
+---
 metadata:
   openclaw:
     requires:
@@ -27,13 +36,13 @@ This skill reads Gmail emails, ranks them by importance, summarizes each email i
 Via ClawHub (recommended):
 
 ```
-clawhub install gmail-daily-briefing
+clawhub install mail-summary
 ```
 
 Manual:
 
 ```
-git clone https://github.com/Russidan-Nadee/gmail-daily-briefing.git ~/.openclaw/workspace/skills/gmail-daily-briefing
+git clone https://github.com/Russidan-Nadee/mail-summary.git ~/.openclaw/workspace/skills/mail-summary
 ```
 
 ## Setup Instructions (First-Time Only)
@@ -53,7 +62,7 @@ git clone https://github.com/Russidan-Nadee/gmail-daily-briefing.git ~/.openclaw
 6. In the left sidebar, go to **APIs & Services → Credentials**
 7. Click **Create Credentials → OAuth client ID**
 8. Under **Application type** select **Desktop app**
-9. Give it a name (e.g. `Gmail Daily Briefing`) → click **Create**
+9. Give it a name (e.g. `Mail Summary`) → click **Create**
 10. Click **Download JSON** → you'll get a file named `client_secret_*.json`
 
 ### Step 2 — Connect to the agent
@@ -86,8 +95,6 @@ max_retries: 5            # Max retry attempts for authentication and API calls
 log_level: INFO           # Logging level: DEBUG, INFO, WARNING, ERROR, CRITICAL
 ```
 
-- If `config.yaml` is missing or a key is not set, the default will be used.
-- Changes to `config.yaml` take effect the next time you run a script.
 
 ## Agent Instructions
 
